@@ -7,5 +7,5 @@ class ClassSession(Base):
     session_id = Column(Integer, primary_key=True, index=True)
     course_id = Column(Integer, ForeignKey("course.course_id"))
     session_date = Column(Date, nullable=False)
-    start_time = Column(Time)
-    end_time = Column(Time)
+    start_time = Column(Time, nullable=True)
+    end_time = Column(Time, nullable=True)
