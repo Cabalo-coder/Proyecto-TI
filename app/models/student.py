@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, TIMESTAMP
 from app.config.database import Base
+from datetime import datetime
 
 class Student(Base):
     __tablename__ = "student"
@@ -9,4 +10,4 @@ class Student(Base):
     last_name = Column(String(100), nullable=False)
     carne = Column(String(50), unique=True, nullable=False)
     section_id = Column(Integer, ForeignKey("section.section_id"))
-    registration_date = Column(TIMESTAMP)
+    registration_date = Column(TIMESTAMP, default=datetime.utcnow)

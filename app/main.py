@@ -5,6 +5,7 @@ from app.routes import teacher_routes
 from app.routes import course_routes
 from app.routes import class_section_routes
 from app.routes import class_session_routes
+from app.routes import student_routes
 
 app = FastAPI()
 
@@ -12,6 +13,7 @@ app.include_router(teacher_routes.router)
 app.include_router(course_routes.router)
 app.include_router(class_section_routes.router)
 app.include_router(class_session_routes.router)
+app.include_router(student_routes.router)
 
 # Crear tablas
 Base.metadata.create_all(bind=engine)
