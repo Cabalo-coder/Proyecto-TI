@@ -69,17 +69,20 @@ def upload_face(
             detail="No se detectó ningún rostro en la imagen"
         )
 
+    # IMPORTANTE: convertir a lista (por si viene como numpy array)
+    descriptor_list = descriptor.tolist() if hasattr(descriptor, "tolist") else descriptor
+
     # Subir a Supabase
     supabase.storage.from_("faces").upload(file_path, file_bytes)
 
     # Obtener URL pública
     image_url = supabase.storage.from_("faces").get_public_url(file_path)
 
-    # Guardar en DB
+    # Guardar en DB (JSON limpio, SIN str)
     new_face = Face(
         student_id=student_id,
         image_url=image_url,
-        facial_descriptor=str(descriptor)  
+        facial_descriptor=descriptor_list   
     )
 
     db.add(new_face)
