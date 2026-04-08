@@ -8,7 +8,7 @@ from app.models.class_session import ClassSession
 def mark_attendance(db: Session, student_id: int):
     now = datetime.datetime.now()
 
-    # Buscar sesión activa (por fecha actual)
+    # sesión activa
     session = db.query(ClassSession).filter(
         ClassSession.session_date == now.date()
     ).first()
@@ -16,21 +16,27 @@ def mark_attendance(db: Session, student_id: int):
     if not session:
         return {"error": "No hay sesión activa hoy"}
 
-    # Verificar si ya marcó asistencia
+    # última asistencia del estudiante en esta sesión
     existing = db.query(Attendance).filter(
         Attendance.student_id == student_id,
         Attendance.session_id == session.session_id
     ).first()
 
     if existing:
+        # evitar spam en video (menos de 10 segundos)
+        diff = (now - existing.check_in_time).total_seconds()
+
+        if diff < 10:
+            return {"message": "Ya registrado recientemente"}
+
         return {"message": "Asistencia ya registrada"}
 
-    # Registrar asistencia
+    # registrar asistencia
     new_attendance = Attendance(
         student_id=student_id,
         session_id=session.session_id,
         check_in_time=now,
-        status="Presente"
+        status="Present"
     )
 
     db.add(new_attendance)
