@@ -11,7 +11,8 @@ from app.services.report_service import (
     get_daily_report,
     get_weekly_report,
     get_monthly_report,
-    get_semester_report
+    get_semester_report,
+    get_report_by_sections
 )
 
 router = APIRouter(prefix="/reports", tags=["Reports"])
@@ -77,3 +78,12 @@ def semester_report(
     current_teacher = Depends(get_current_teacher)
 ):
     return get_semester_report(db, current_teacher["id"])
+
+
+# Por secciones
+@router.get("/by-sections")
+def by_sections_report(
+    db: Session = Depends(get_db),
+    current_teacher = Depends(get_current_teacher)
+):
+    return get_report_by_sections(db, current_teacher["id"])
