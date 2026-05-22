@@ -1,5 +1,8 @@
-# Importa la librería de reconocimiento facial
-import face_recognition
+# Importa la librería de reconocimiento facial si está disponible
+try:
+    import face_recognition
+except ModuleNotFoundError:
+    face_recognition = None
 
 # Importa NumPy para manejo de arreglos y procesamiento de imágenes
 import numpy as np
@@ -13,6 +16,9 @@ import io
 
 # Función para generar el descriptor facial de un único rostro
 def generate_face_descriptor(file_bytes: bytes):
+
+    if face_recognition is None:
+        return None
 
     try:
         # Abre la imagen desde bytes
@@ -45,6 +51,9 @@ def generate_face_descriptor(file_bytes: bytes):
 
 # Función para generar descriptores faciales de múltiples rostros
 def generate_multiple_descriptors(file_bytes: bytes):
+
+    if face_recognition is None:
+        return []
 
     try:
         # Abre la imagen desde bytes

@@ -9,6 +9,7 @@ from app.dependencies.database import get_db
 
 # Importa el servicio de reconocimiento facial con cálculo de similitud
 from app.services.face_recognition_service import recognize_face_with_score
+from app.services.attendance_service import mark_attendance
 
 
 # Crea el router para las rutas relacionadas con reconocimiento facial
@@ -56,15 +57,19 @@ def recognize(
     # Si el estudiante fue reconocido
     if student:
 
-        # Retorna información del estudiante reconocido
+        # Registra automáticamente la asistencia del estudiante reconocido
+        attendance = mark_attendance(db, student.student_id)
+
+        # Retorna información del estudiante reconocido y estado de asistencia
         return {
-            "message": "Estudiante reconocido",
+            "message": "Estudiante reconocido y asistencia marcada",
             "verified": True,
             "student_id": student.student_id,
             "name": f"{student.first_name} {student.last_name}",
             "distance": distance,
             "threshold": threshold,
             "confidence": _build_confidence(distance, threshold),
+            "attendance": attendance,
         }
 
     # Si no hubo coincidencia facial
